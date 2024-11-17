@@ -10,7 +10,6 @@ function _sanitize(text) {
 
 function get(query, offset = 0, limit = 50) {
     return new Promise((resolve, reject) => {
-        console.log(query)
         if (query) {
             if (/\D+/g.test(query)) {
             console.log('[ACCOUNT] Invalid Query', query)
@@ -24,10 +23,37 @@ function get(query, offset = 0, limit = 50) {
             resolve(results)
             })
         } else {
-            databaseInstance.query(`SELECT * FROM users_guardian ORDER BY id LIMIT ${limit} OFFSET ${offset}`, (err, results, fields) => {
+            databaseInstance.query(`SELECT ID, email, birth_year FROM users_guardian ORDER BY id LIMIT ${limit} OFFSET ${offset}`, (err, results, fields) => {
                 if (err) reject(err)
+                const data = []
+            
+            for (let i = 0; i < results.length; i++) {
+                    let date = new Date()
+                    let year = date.getFullYear()
+                    let age = year - results[i].birth_year
+                    let guardian_ID = results[i].ID
+                    let email = results[i].email
+                    const user = []
+                    
+                    databaseInstance.query(`SELECT ID, username, guardian_ID FROM users WHERE guardian_ID = ?`, [guardian_ID], (err, results1, fields) => {
+                        
+                        for (let j = 0; j < results1.length; j++) {
+                            user.push(results1[j].username)
+                        }
 
-                resolve(results)
+
+                        const guardian = {
+                            "email": email,
+                            "age": age,
+                            "number_of_users": results1.length,
+                            "users": user
+                        }
+                        data.push(guardian)
+                        if (data.length == results.length) {
+                            resolve(data)
+                        }
+                    })
+                }
             })
         }
     })

@@ -9,7 +9,8 @@ function _sanitize(text) {
 
 function get(query, offset = 0, limit = 50) {
     return new Promise((resolve, reject) => {
-        console.log(query)
+        const data = [{},
+            {"Age3": 0, "Age4": 0, "Age5": 0}]
         if (query) {
             if (/\D+/g.test(query)) {
             console.log('[ACCOUNT] Invalid Query', query)
@@ -26,7 +27,19 @@ function get(query, offset = 0, limit = 50) {
             databaseInstance.query(`SELECT * FROM users ORDER BY id LIMIT ${limit} OFFSET ${offset}`, (err, results, fields) => {
                 if (err) reject(err)
 
-                resolve(results)
+                data[0] = results
+                for (let i = 0; i < results.length; i++) {
+                    if (results[i].age == 3) {
+                        data[1].Age3 += 1
+                    }
+                    else if (results[i].age == 4) {
+                        data[1].Age4 += 1
+                    }
+                    else if (results[i].age == 5) {
+                        data[1].Age5 += 1
+                    }
+                }
+                resolve(data)
             })
         }
     })
@@ -53,7 +66,23 @@ function add_user(username, age, gender, avatar_filename, current_theme, current
     })
 }
 
+function update_level(userID, current_level) {
+    const cleanUserID = _sanitize(userID)
+    const cleanLevel = _sanitize(current_level)
+  
+    return new Promise((resolve, reject) => {
+        databaseInstance.query(`UPDATE users SET current_level = ? WHERE ID = ?`,
+        [cleanLevel, cleanUserID], 
+        (err, result) => {
+            if (err) reject(err)
+            resolve(result)
+            }
+        )
+    })
+}
+
 export default {
     get,
-    add_user
+    add_user,
+    update_level
 }

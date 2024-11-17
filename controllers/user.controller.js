@@ -4,14 +4,24 @@ export async function getUser(request, response) {
     response.setHeader('Content-Type', 'application/json')
   
     try {
-      const id = request?.query.id
-  
-      const data = await user.get(id)
-  
-      response.write(JSON.stringify({
-        'success': true,
-        'data': data
-      }, undefined, 4))
+      const guardian_id = request?.query.guardian_ID
+
+      const data = await user.get(guardian_id)
+
+      if (guardian_id) {
+
+        response.write(JSON.stringify({
+          'success': true,
+          'data': data
+        }, undefined, 4))
+      }
+      else {
+        response.write(JSON.stringify({
+          'success': true,
+          'data':data[0],
+          'totalUsers': data[1]
+        }, undefined, 4))
+      }
       
     } catch (err) {
       response.write(JSON.stringify({
@@ -62,4 +72,39 @@ export async function addUser(request, response) {
     }
   
     return response.end()
+}
+
+export async function updateLevel(request, response) {
+  response.setHeader('Content-Type', 'application/json')
+ 
+  try {
+    const data = request?.body
+    console.log(data)
+    const userID = data.userID
+    const current_level = data.current_level
+    // console.log(user)
+
+    if (!userID || !current_level) {
+
+        response.write(JSON.stringify({
+        'success': false,
+        'message': 'Invalid data. Expecting `userID`, `current_level`.',
+        }))
+        return response.end()
+    }
+
+    const res = await user.update_level(userID, current_level)
+
+    response.write(JSON.stringify({
+        'success': true,
+        'data': res
+    }))
+  } catch (err) {
+    response.write(JSON.stringify({
+      'success': false,
+      'message': err.message,
+    }))
+  }
+
+  return response.end()
 }
