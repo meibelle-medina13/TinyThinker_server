@@ -81,3 +81,36 @@ export async function searchGuardian(request, response) {
   
     return response.end()
 }
+
+export async function LogIn(request, response) {
+  response.setHeader('Content-Type', 'application/json')
+  console.log(request.data)
+  try {
+      const data = request?.body
+      const email = data.email
+      const password = data.password
+  
+      if (!email || !password) {
+
+          response.write(JSON.stringify({
+          'success': false,
+          'message': 'Invalid data. Expecting `email`, `password`.',
+          }))
+          return response.end()
+      }
+  
+      const res = await guardian.login(email, password)
+  
+      response.write(JSON.stringify({
+          'success': true,
+          'data': res
+      }))
+  } catch (err) {
+    response.write(JSON.stringify({
+      'success': false,
+      'message': err.message,
+    }))
+  }
+
+  return response.end()
+}

@@ -92,7 +92,34 @@ function search_guardian(email) {
     })
 }
 
+function login(email, password) {
+    password = password.toString()
+    const cleanEmail = _sanitize(email)
+    const cleanPassword = _sanitize(password)
 
+    console.log(typeof(password))
+
+    const hashedPass = md5(cleanPassword)
+  
+    return new Promise((resolve, reject) => {
+        databaseInstance.query(`SELECT password FROM users_guardian WHERE email = ?`, [cleanEmail], (err, result) => {
+            if (err) reject(err)
+            if (result.length > 0) {
+                const result_pass = result[0].password
+                if (hashedPass == result_pass) {
+                    resolve("Login Successful!")
+                }
+                else {
+                    resolve("Login Failed!")
+                }
+            }
+            else {
+                resolve("Email Not Found!")
+            }
+            }
+        )
+    })
+}
 
 
 
@@ -102,5 +129,6 @@ function search_guardian(email) {
 export default {
     get,
     add_guardian,
-    search_guardian
+    search_guardian,
+    login
 }
