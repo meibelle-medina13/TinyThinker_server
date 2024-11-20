@@ -27,14 +27,15 @@ function get(theme_number, offset = 0, limit = 50) {
                 if (level_score[results[i].level_num] == null) {
                     level_score[results[i].level_num] = results[i].scores
                     const level = {}
-                    level[results[i].level_num] = results[i].scores
+                    level["level_num"] = results[i].level_num
+                    level["score"] = results[i].scores
                     level["num_of_users"] = 1
                     summary_of_scores.push(level)
                 } else {
                     level_score[results[i].level_num] += results[i].scores
                     for (let j = 0; j < summary_of_scores.length; j++) {
-                        if (summary_of_scores[j][results[i].level_num] != null) {
-                            summary_of_scores[j][results[i].level_num] += results[i].scores
+                        if (summary_of_scores[j]["level_num"] == results[i].level_num) {
+                            summary_of_scores[j]["score"] += results[i].scores
                             summary_of_scores[j]["num_of_users"] += 1
                         }
                     }
@@ -45,8 +46,8 @@ function get(theme_number, offset = 0, limit = 50) {
             }
             
             for (let k = 0; k < summary_of_scores.length; k++) {
-                const values = Object.values(summary_of_scores[k]);
-                const ave = values[0] / values[1]
+                // const values = Object.values(summary_of_scores[k]);
+                const ave = summary_of_scores[k]["score"] / summary_of_scores[k]["num_of_users"]
                 summary_of_scores[k]["score_average"] = ave
             }
             resolve(summary_of_scores)
