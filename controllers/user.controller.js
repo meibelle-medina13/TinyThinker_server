@@ -4,23 +4,32 @@ export async function getUser(request, response) {
     response.setHeader('Content-Type', 'application/json')
   
     try {
-      const guardian_id = request?.query.guardian_ID
 
-      const data = await user.get(guardian_id)
+      const guardian_id = request?.query.guardian_ID
+      const ID = request?.query.ID
 
       if (guardian_id) {
-
+        const data = await user.get_user_by_guardianID(guardian_id)
         response.write(JSON.stringify({
           'success': true,
           'data': data
         }, undefined, 4))
       }
       else {
-        response.write(JSON.stringify({
-          'success': true,
-          'data':data[0],
-          'totalUsers': data[1]
-        }, undefined, 4))
+        if (ID) {
+          const data = await user.get(ID)
+          response.write(JSON.stringify({
+            'success': true,
+            'data': data
+          }, undefined, 4))
+        }
+        else {
+          response.write(JSON.stringify({
+            'success': true,
+            'data':data[0],
+            'totalUsers': data[1]
+          }, undefined, 4))
+        }
       }
       
     } catch (err) {

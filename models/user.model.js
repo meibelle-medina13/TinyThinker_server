@@ -18,7 +18,7 @@ function get(query, offset = 0, limit = 50) {
             }
     
             const id = parseInt(query, 10)
-            databaseInstance.query(`SELECT * FROM users WHERE guardian_ID = ?`, [id], (err, results, fields) => {
+            databaseInstance.query(`SELECT * FROM users WHERE ID = ?`, [id], (err, results, fields) => {
             if (err) reject(err)
     
             resolve(results)
@@ -43,6 +43,24 @@ function get(query, offset = 0, limit = 50) {
             })
         }
     })
+}
+
+function get_user_by_guardianID(guardianID) {
+    return new Promise((resolve, reject) => {
+        if (guardianID) {
+            if (/\D+/g.test(guardianID)) {
+            console.log('[ACCOUNT] Invalid Query', guardianID)
+            resolve([])
+            }
+    
+            const id = parseInt(guardianID, 10)
+            databaseInstance.query(`SELECT * FROM users WHERE guardian_ID = ?`, [id], (err, results, fields) => {
+            if (err) reject(err)
+    
+            resolve(results)
+            })
+        }
+        })
 }
 
 function add_user(username, age, gender, avatar_filename, current_theme, current_level, relation_to_guardian, guardian_ID) {
@@ -83,6 +101,7 @@ function update_level(userID, current_level) {
 
 export default {
     get,
+    get_user_by_guardianID,
     add_user,
     update_level
 }
