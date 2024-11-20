@@ -16,8 +16,8 @@ export async function getUser(request, response) {
         }, undefined, 4))
       }
       else {
+        const data = await user.get(ID)
         if (ID) {
-          const data = await user.get(ID)
           response.write(JSON.stringify({
             'success': true,
             'data': data
