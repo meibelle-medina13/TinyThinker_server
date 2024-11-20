@@ -4,7 +4,7 @@ export async function getScores(request, response) {
     response.setHeader('Content-Type', 'application/json')
   
     try {
-      const id = request?.body.theme
+      const id = request?.query.theme
   
       const data = await records.get(id)
   
