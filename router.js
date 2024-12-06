@@ -8,7 +8,7 @@ const registerRoutes = (app) => {
     app.use(cors())
     app.use('/users_guardian', GuardianRoutes)
     app.use('/users', UserRoutes)
-    app.use('/score-average', Scores)
+    app.use('/scores', Scores)
 
 }
 

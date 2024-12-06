@@ -40,13 +40,9 @@ function get(theme_number, offset = 0, limit = 50) {
                         }
                     }
                 }
-                // if (i == results.length -1) {
-                //     console.log(summary_of_scores)
-                // }
             }
             
             for (let k = 0; k < summary_of_scores.length; k++) {
-                // const values = Object.values(summary_of_scores[k]);
                 const ave = summary_of_scores[k]["score"] / summary_of_scores[k]["num_of_users"]
                 summary_of_scores[k]["score_average"] = ave
             }
@@ -56,6 +52,32 @@ function get(theme_number, offset = 0, limit = 50) {
     })
 }
 
+function update_score(userID, theme, level, score) {
+    const cleanUserID = _sanitize(userID)
+    const cleanScore = _sanitize(score)
+    const cleanLevel = _sanitize(level)
+    const cleanTheme = _sanitize(theme)
+  
+    return new Promise((resolve, reject) => {
+        databaseInstance.query(`UPDATE scores SET scores = ? WHERE user_ID = ? AND theme_num = ? AND level_num = ?`,
+        [cleanScore, cleanUserID, cleanTheme, cleanLevel], 
+        (err, result) => {
+            if (err) reject(err)
+            // resolve(result.changedRows)
+            if (result.changedRows == 0) {
+                databaseInstance.query(`INSERT INTO scores (user_ID, theme_num, level_num, scores) VALUES(?, ?, ?, ?)`, [cleanUserID, cleanTheme, cleanLevel, cleanScore], (err, insertResult) => {
+                    resolve(insertResult)
+                })
+            }
+            else {
+                resolve(result)
+            }
+            }
+        )
+    })
+}
+
 export default {
-    get
+    get,
+    update_score
 }

@@ -61,7 +61,7 @@ function get(query, offset = 0, limit = 50) {
 
 function add_guardian(email, password, birth_month, birth_date, birth_year) {
     const cleanEmail = _sanitize(email)
-    const cleanPassword = _sanitize(password)
+    const cleanPassword = _sanitize(password).toString()
     const cleanBirthMonth = _sanitize(birth_month)
     const cleanBirthDate = _sanitize(birth_date)
     const cleanBirthYear = _sanitize(birth_year)
@@ -121,14 +121,30 @@ function login(email, password) {
     })
 }
 
-
-
-
-
+function verify_birth_year(id, year) {
+    const cleanID = _sanitize(id)
+    const cleanYear = _sanitize(year)
+  
+    return new Promise((resolve, reject) => {
+        databaseInstance.query(`SELECT birth_year FROM users_guardian WHERE ID = ?`, [cleanID], (err, result) => {
+            if (err) reject(err)
+            if (result.length > 0) {
+                const result_year = result[0].birth_year
+                if (cleanYear == result_year) {
+                    resolve("Birth year is correct")
+                }
+                else {
+                    resolve("Birth year is incorrect")
+                }
+            }
+        })
+    })
+}
 
 export default {
     get,
     add_guardian,
     search_guardian,
-    login
+    login,
+    verify_birth_year
 }

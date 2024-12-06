@@ -114,3 +114,35 @@ export async function LogIn(request, response) {
 
   return response.end()
 }
+
+export async function VerifyBirthYear(request, response) {
+  response.setHeader('Content-Type', 'application/json')
+  try {
+      const data = request?.body
+      const ID = data.ID
+      const year = data.birth_year
+  
+      if (!ID || !year) {
+
+          response.write(JSON.stringify({
+          'success': false,
+          'message': 'Invalid data. Expecting `ID`, `birth_year`.',
+          }))
+          return response.end()
+      }
+  
+      const res = await guardian.verify_birth_year(ID, year)
+  
+      response.write(JSON.stringify({
+          'success': true,
+          'data': res
+      }))
+  } catch (err) {
+    response.write(JSON.stringify({
+      'success': false,
+      'message': err.message,
+    }))
+  }
+
+  return response.end()
+}

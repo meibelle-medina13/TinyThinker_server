@@ -1,8 +1,9 @@
 import express from 'express'
 const router = express.Router()
 
-import { getScores } from '../controllers/score.controller.js'
+import { getScores, updateScore } from '../controllers/score.controller.js'
 
-router.get('/', getScores)
+router.get('/average', getScores)
+router.put('/', updateScore)
 
 export default router
