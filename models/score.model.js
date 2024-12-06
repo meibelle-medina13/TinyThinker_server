@@ -64,7 +64,7 @@ function update_score(userID, theme, level, score) {
         (err, result) => {
             if (err) reject(err)
             // resolve(result.changedRows)
-            if (result.changedRows == 0) {
+            if (result.affectedRows == 0) {
                 databaseInstance.query(`INSERT INTO scores (user_ID, theme_num, level_num, scores) VALUES(?, ?, ?, ?)`, [cleanUserID, cleanTheme, cleanLevel, cleanScore], (err, insertResult) => {
                     resolve(insertResult)
                 })
