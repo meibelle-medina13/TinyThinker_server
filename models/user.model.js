@@ -99,9 +99,42 @@ function update_level(userID, current_level) {
     })
 }
 
+function update_theme(userID, current_theme) {
+    const cleanUserID = _sanitize(userID)
+    const cleanTheme = _sanitize(current_theme)
+  
+    return new Promise((resolve, reject) => {
+        databaseInstance.query(`UPDATE users SET current_theme = ? WHERE ID = ?`,
+        [cleanTheme, cleanUserID], 
+        (err, result) => {
+            if (err) reject(err)
+            resolve(result)
+            }
+        )
+    })
+}
+
+function update_profile(userID, avatar_filename, username) {
+    const cleanUserID = _sanitize(userID)
+    const cleanAvatarFilename = _sanitize(avatar_filename)
+    const cleanUsername = _sanitize(username)
+  
+    return new Promise((resolve, reject) => {
+        databaseInstance.query(`UPDATE users SET avatar_filename = ?, username = ? WHERE ID = ?`,
+        [cleanAvatarFilename, cleanUsername, cleanUserID], 
+        (err, result) => {
+            if (err) reject(err)
+            resolve(result)
+            }
+        )
+    })
+}
+
 export default {
     get,
     get_user_by_guardianID,
     add_user,
-    update_level
+    update_level,
+    update_theme,
+    update_profile
 }

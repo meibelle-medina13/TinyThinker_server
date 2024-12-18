@@ -52,7 +52,7 @@ function get(theme_number, offset = 0, limit = 50) {
     })
 }
 
-function update_score(userID, theme, level, score) {
+function update_Levelscore(userID, theme, level, score) {
     const cleanUserID = _sanitize(userID)
     const cleanScore = _sanitize(score)
     const cleanLevel = _sanitize(level)
@@ -63,7 +63,6 @@ function update_score(userID, theme, level, score) {
         [cleanScore, cleanUserID, cleanTheme, cleanLevel], 
         (err, result) => {
             if (err) reject(err)
-            // resolve(result.changedRows)
             if (result.affectedRows == 0) {
                 databaseInstance.query(`INSERT INTO scores (user_ID, theme_num, level_num, scores) VALUES(?, ?, ?, ?)`, [cleanUserID, cleanTheme, cleanLevel, cleanScore], (err, insertResult) => {
                     resolve(insertResult)
@@ -79,5 +78,5 @@ function update_score(userID, theme, level, score) {
 
 export default {
     get,
-    update_score
+    update_Levelscore
 }

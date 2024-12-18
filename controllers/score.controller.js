@@ -43,7 +43,7 @@ export async function updateScore(request, response) {
         return response.end()
     }
 
-    const res = await records.update_score(userID, theme_num, level_num, score)
+    const res = await records.update_Levelscore(userID, theme_num, level_num, score)
 
     response.write(JSON.stringify({
         'success': true,

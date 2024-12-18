@@ -117,3 +117,74 @@ export async function updateLevel(request, response) {
 
   return response.end()
 }
+
+export async function updateTheme(request, response) {
+  response.setHeader('Content-Type', 'application/json')
+ 
+  try {
+    const data = request?.body
+    console.log(data)
+    const userID = data.userID
+    const current_theme = data.current_theme
+    // console.log(user)
+
+    if (!userID || !current_theme) {
+
+        response.write(JSON.stringify({
+        'success': false,
+        'message': 'Invalid data. Expecting `userID`, `current_theme`.',
+        }))
+        return response.end()
+    }
+
+    const res = await user.update_theme(userID, current_theme)
+
+    response.write(JSON.stringify({
+        'success': true,
+        'data': res
+    }))
+  } catch (err) {
+    response.write(JSON.stringify({
+      'success': false,
+      'message': err.message,
+    }))
+  }
+
+  return response.end()
+}
+
+export async function updateProfile(request, response) {
+  response.setHeader('Content-Type', 'application/json')
+ 
+  try {
+    const data = request?.body
+    console.log(data)
+    const userID = data.userID
+    const avatar_filename = data.avatar_filename
+    const username = data.username
+    // console.log(user)
+
+    if (!userID || !avatar_filename || !username) {
+
+        response.write(JSON.stringify({
+        'success': false,
+        'message': 'Invalid data. Expecting `userID`, `avatar_filename`, `username`.',
+        }))
+        return response.end()
+    }
+
+    const res = await user.update_profile(userID, avatar_filename, username)
+
+    response.write(JSON.stringify({
+        'success': true,
+        'data': res
+    }))
+  } catch (err) {
+    response.write(JSON.stringify({
+      'success': false,
+      'message': err.message,
+    }))
+  }
+
+  return response.end()
+}
