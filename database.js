@@ -1,10 +1,16 @@
 import mysql from 'mysql2'
 
-const DATABASE_HOST = 'mysql-17d6ea4e-tinythinker.f.aivencloud.com'
-const DATABASE_USERNAME = 'avnadmin'
-const DATABASE_PASSWORD = 'AVNS_2c14i9EDNnLxLr2d2A3'
+// const DATABASE_HOST = 'mysql-17d6ea4e-tinythinker.f.aivencloud.com'
+// const DATABASE_USERNAME = 'avnadmin'
+// const DATABASE_PASSWORD = 'AVNS_2c14i9EDNnLxLr2d2A3'
+// const DATABASE_NAME = 'tinythinker'
+// const PORT = 17267
+
+const DATABASE_HOST = 'localhost'
+const DATABASE_USERNAME = 'meibellemedina'
+const DATABASE_PASSWORD = 'meichuninoo101302!'
 const DATABASE_NAME = 'tinythinker'
-const PORT = 17267
+const PORT = 3306
 
 const databaseInstance = mysql.createPool({
   host: DATABASE_HOST,

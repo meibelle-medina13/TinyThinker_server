@@ -14,12 +14,12 @@ function update_PrePostTestscore(userID, theme, testType, score) {
     const cleanTheme = _sanitize(theme)
   
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`UPDATE prepost_test_scores SET scores = ? WHERE user_ID = ? AND theme_num = ? AND test_type = ?`,
+        databaseInstance.query(`UPDATE prepost_test SET scores = ? WHERE user_ID = ? AND theme_num = ? AND test_type = ?`,
         [cleanScore, cleanUserID, cleanTheme, cleanTest], 
         (err, result) => {
             if (err) reject(err)
             if (result.affectedRows == 0) {
-                databaseInstance.query(`INSERT INTO prepost_test_scores (user_ID, theme_num, test_type, scores) VALUES(?, ?, ?, ?)`, [cleanUserID, cleanTheme, cleanTest, cleanScore], (err, insertResult) => {
+                databaseInstance.query(`INSERT INTO prepost_test (user_ID, theme_num, test_type, scores) VALUES(?, ?, ?, ?)`, [cleanUserID, cleanTheme, cleanTest, cleanScore], (err, insertResult) => {
                     resolve(insertResult)
                 })
             }
