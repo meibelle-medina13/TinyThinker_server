@@ -12,7 +12,7 @@ function get(query, offset = 0, limit = 50) {
     return new Promise((resolve, reject) => {
         if (query) {
             if (/\D+/g.test(query)) {
-            console.log('[ACCOUNT] Invalid Query', query)
+            console.log('[GUARDIAN ACCOUNT] Invalid Query', query)
             resolve([])
             }
     

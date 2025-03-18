@@ -1,8 +1,9 @@
 import express from 'express'
 const router = express.Router()
 
-import { updatePrePostTest } from '../controllers/preposttest.controller.js'
+import { updatePrePostTest, getPrePostTest } from '../controllers/preposttest.controller.js'
 
 router.put('/', updatePrePostTest)
+router.get('/', getPrePostTest)
 
 export default router

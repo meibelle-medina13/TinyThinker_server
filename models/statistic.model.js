@@ -12,7 +12,7 @@ function get(user_ID, theme_number, offset = 0, limit = 50) {
         
         if (user_ID && theme_number) {
             if (/\D+/g.test(theme_number)) {
-            console.log('[ACCOUNT] Invalid Query', theme_number)
+            console.log('[STATISTICS] Invalid Query', theme_number)
             resolve([])
             }
     

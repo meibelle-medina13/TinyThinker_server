@@ -13,7 +13,7 @@ function get(query, offset = 0, limit = 50) {
             {"Age3": 0, "Age4": 0, "Age5": 0}]
         if (query) {
             if (/\D+/g.test(query)) {
-            console.log('[ACCOUNT] Invalid Query', query)
+            console.log('[PLAYER ACCOUNT] Invalid Query', query)
             resolve([])
             }
     
@@ -49,7 +49,7 @@ function get_user_by_guardianID(guardianID) {
     return new Promise((resolve, reject) => {
         if (guardianID) {
             if (/\D+/g.test(guardianID)) {
-            console.log('[ACCOUNT] Invalid Query', guardianID)
+            console.log('[PLAYER ACCOUNT] Invalid Query', guardianID)
             resolve([])
             }
     
