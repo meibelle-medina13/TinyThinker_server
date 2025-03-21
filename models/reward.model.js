@@ -39,13 +39,23 @@ function add_reward(userID, reward_type) {
     const reward_type_ID = parseInt(reward_type, 10)
   
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`INSERT INTO reward_collection (user_ID, reward_type_ID) VALUES(?, ?)`,
-        [user_ID, reward_type_ID], 
-        (err, result) => {
+        databaseInstance.query(`SELECT * FROM reward_collection WHERE user_ID = ? AND reward_type_ID = ?`, [user_ID, reward_type_ID], (err, results, fields) => {
             if (err) reject(err)
-            resolve(result)
+    
+            console.log(results.length)
+            if (results.length == 0) {
+                databaseInstance.query(`INSERT INTO reward_collection (user_ID, reward_type_ID) VALUES(?, ?)`,
+                [user_ID, reward_type_ID], 
+                (err, result) => {
+                    if (err) reject(err)
+                    resolve(result)
+                    }
+                )
             }
-        )
+            else {
+                resolve([])
+            }
+            })
     })
 }
 
