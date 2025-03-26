@@ -6,12 +6,12 @@ function _sanitize(text) {
     if (typeof text === "number") {
         return text
     }
-    return text.replace(/([^a-z-A-Z-0-9 .@_'])+/g, '')
+    return text.replace(/([^a-z-A-Z-0-9 .@/_'])+/g, '')
 }
 
 function add_admin(username, password, lastname, firstname, middle_name) {
     const cleanUsername = _sanitize(username)
-    const cleanPassword = _sanitize(password).toString()
+    const cleanPassword = password.toString()
     const cleanLastname = _sanitize(lastname)
     const cleanFirstname = _sanitize(firstname)
     const cleanMiddleName = _sanitize(middle_name)
@@ -23,7 +23,17 @@ function add_admin(username, password, lastname, firstname, middle_name) {
         [cleanUsername, hashedPass, cleanLastname, cleanFirstname, cleanMiddleName], 
         (err, result) => {
             if (err) reject(err)
-            resolve()
+            if (result != undefined) {
+                if (result.insertId > 0) {
+                    databaseInstance.query(`SELECT ID FROM admin_accounts WHERE username = ?`, [cleanUsername], (err, getresult) => {
+                        if (err) reject(err)
+                        resolve({
+                            "message": "Signup Successful",
+                            "id": getresult[0].ID
+                        })
+                    })
+                }
+            }
             }
         )
     })
@@ -32,7 +42,7 @@ function add_admin(username, password, lastname, firstname, middle_name) {
 function login(username, password) {
     password = password.toString()
     const cleanUsername = _sanitize(username)
-    const cleanPassword = _sanitize(password)
+    const cleanPassword = password.toString()
 
     const hashedPass = md5(cleanPassword)
   
@@ -44,7 +54,7 @@ function login(username, password) {
                 if (hashedPass == result_pass) {
                     resolve({
                         "message": "Login Successful",
-                        "ID": result[0].ID
+                        "id": result[0].ID
                     })
                 }
                 else {

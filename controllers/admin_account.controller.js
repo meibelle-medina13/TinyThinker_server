@@ -22,7 +22,8 @@ export async function addAdmin(request, response) {
         const res = await admin.add_admin(username, password, lastname, firstname, middle_name)
     
         response.write(JSON.stringify({
-            'success': true
+            'success': true,
+            'data': res
         }))
     } catch (err) {
       response.write(JSON.stringify({
