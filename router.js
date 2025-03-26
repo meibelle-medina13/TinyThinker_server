@@ -7,6 +7,7 @@ import TestScore from './routes/preposttest.route.js'
 import Statistic from './routes/statistic.route.js'
 import QuarterStatus from './routes/quarter_status.route.js'
 import RewardCollection from './routes/reward.route.js'
+import AdminAccount from './routes/admin_account.route.js'
 
 const registerRoutes = (app) => {
     app.use(cors())
@@ -17,6 +18,7 @@ const registerRoutes = (app) => {
     app.use('/statistic', Statistic)
     app.use('/quarter_status', QuarterStatus)
     app.use('/reward', RewardCollection)
+    app.use('/admin', AdminAccount)
 }
 
 export default registerRoutes
