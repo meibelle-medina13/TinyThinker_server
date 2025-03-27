@@ -32,7 +32,11 @@ export async function updateScore(request, response) {
     const userID = data.userID
     const theme_num = data.theme_num
     const level_num = data.level_num
-    const score = data.score
+    let score = data.score
+
+    if (score == 0) {
+      score = "0"
+    }
 
     if (!userID || !theme_num || !level_num || !score) {
 
