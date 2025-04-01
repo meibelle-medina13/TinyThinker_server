@@ -105,3 +105,104 @@ export async function getPending(request, response) {
 
   return response.end()
 }
+
+export async function updateAdminAccount(request, response) {
+  response.setHeader('Content-Type', 'application/json')
+ 
+  try {
+    const data = request?.body
+    const adminID = data.adminID
+    const lastname = data.lastname
+    const firstname = data.firstname
+    const middle_name = data.middle_name
+    const age = data.age
+    const profile = data.profile_url
+
+    if (!adminID || !lastname || !firstname || !age || !profile) {
+
+        response.write(JSON.stringify({
+        'success': false,
+        'message': 'Invalid data. Expecting `adminID`, `lastname`, `firstname`, `age`, `profile_url`.',
+        }))
+        return response.end()
+    }
+
+    const res = await admin.update_adminAccount(adminID, lastname, firstname, middle_name, age, profile)
+
+    response.write(JSON.stringify({
+        'success': true,
+        'data': res
+    }))
+  } catch (err) {
+    response.write(JSON.stringify({
+      'success': false,
+      'message': err.message,
+    }))
+  }
+
+  return response.end()
+}
+
+export async function approveRequest(request, response) {
+  response.setHeader('Content-Type', 'application/json')
+ 
+  try {
+    const data = request?.body
+    const adminID = data.adminID
+
+    if (!adminID) {
+
+        response.write(JSON.stringify({
+        'success': false,
+        'message': 'Invalid data. Expecting `adminID`.',
+        }))
+        return response.end()
+    }
+
+    const res = await admin.approve_request(adminID)
+
+    response.write(JSON.stringify({
+        'success': true,
+        'data': res
+    }))
+  } catch (err) {
+    response.write(JSON.stringify({
+      'success': false,
+      'message': err.message,
+    }))
+  }
+
+  return response.end()
+}
+
+export async function declineRequest(request, response) {
+  response.setHeader('Content-Type', 'application/json')
+ 
+  try {
+    const data = request?.body
+    const adminID = data.adminID
+
+    if (!adminID) {
+
+        response.write(JSON.stringify({
+        'success': false,
+        'message': 'Invalid data. Expecting `adminID`.',
+        }))
+        return response.end()
+    }
+
+    const res = await admin.decline_request(adminID)
+
+    response.write(JSON.stringify({
+        'success': true,
+        'data': res
+    }))
+  } catch (err) {
+    response.write(JSON.stringify({
+      'success': false,
+      'message': err.message,
+    }))
+  }
+
+  return response.end()
+}

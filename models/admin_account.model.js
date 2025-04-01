@@ -95,9 +95,74 @@ function get_pending() {
     })
 }
 
+function update_adminAccount(adminID, lastname, firstname, middle_name, age, profile_url) {
+    const cleanLastname = _sanitize(lastname)
+    const cleanFirstname = _sanitize(firstname)
+    const cleanMiddleName = _sanitize(middle_name)
+    const cleanAge = _sanitize(age)
+    const profile_link = profile_url
+    
+    const admin = parseInt(adminID, 10)
+
+    return new Promise((resolve, reject) => {
+        databaseInstance.query(`UPDATE admin_accounts SET lastname = ?, firstname = ?, middle_name = ?, profile_url = ?, age = ? WHERE ID = ?`,
+        [cleanLastname, cleanFirstname, cleanMiddleName, profile_link, cleanAge, admin], 
+        (err, result) => {
+            if (err) reject(err)
+            resolve({
+                "message": "Profile Update Successful"
+            })
+            }
+        )
+    })
+}
+
+function approve_request(adminID) {
+    if (adminID) {
+        if (/\D+/g.test(adminID)) {
+        console.log('[ADMIN ACCOUNT] Invalid Query ', adminID)
+        resolve([])
+        }
+    }
+    const admin = parseInt(adminID, 10)
+    return new Promise((resolve, reject) => {
+        databaseInstance.query(`UPDATE admin_accounts SET status = ? WHERE ID = ?`,
+        [1, admin], 
+        (err, result) => {
+            if (err) reject(err)
+            console.log(result)
+            resolve("Account Approved!")
+            }
+        )
+    })
+}
+
+function decline_request(adminID) {
+    if (adminID) {
+        if (/\D+/g.test(adminID)) {
+        console.log('[ADMIN ACCOUNT] Invalid Query ', adminID)
+        resolve([])
+        }
+    }
+    const admin = parseInt(adminID, 10)
+    return new Promise((resolve, reject) => {
+        databaseInstance.query(`DELETE FROM admin_accounts WHERE ID = ?`,
+        [admin], 
+        (err, result) => {
+            if (err) reject(err)
+            console.log(result)
+            resolve("Account Declined!")
+            }
+        )
+    })
+}
+
 export default {
     add_admin,
     login,
     get_admin,
-    get_pending
+    get_pending,
+    update_adminAccount,
+    approve_request,
+    decline_request
 }
