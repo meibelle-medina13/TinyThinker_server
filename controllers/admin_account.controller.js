@@ -9,17 +9,19 @@ export async function addAdmin(request, response) {
         const lastname = data.lastname
         const firstname = data.firstname
         const middle_name = data.middle_name
+        const age = data.age
+        const profile = data.profile_url
     
-        if (!username || !password || !lastname || !firstname) {
+        if (!username || !password || !lastname || !firstname || !age || !profile) {
 
             response.write(JSON.stringify({
             'success': false,
-            'message': 'Invalid data. Expecting `username`, `password`, `lastname`, `firstname`.',
+            'message': 'Invalid data. Expecting `username`, `password`, `lastname`, `firstname`, `age`, `profile_url`.',
             }))
             return response.end()
         }
     
-        const res = await admin.add_admin(username, password, lastname, firstname, middle_name)
+        const res = await admin.add_admin(username, password, lastname, firstname, middle_name, age, profile)
     
         response.write(JSON.stringify({
             'success': true,
@@ -90,4 +92,16 @@ export async function getAdmin(request, response) {
     }
   
     return response.end()
+}
+
+export async function getPending(request, response) {
+  response.setHeader('Content-Type', 'application/json')
+
+  const data = await admin.get_pending()
+    response.write(JSON.stringify({
+      'success': true,
+      'data': data
+    }, undefined, 4))
+
+  return response.end()
 }
