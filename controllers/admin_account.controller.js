@@ -9,20 +9,17 @@ export async function addAdmin(request, response) {
         const lastname = data.lastname
         const firstname = data.firstname
         const middle_name = data.middle_name
-        const age = data.age
-        const address = data.address
-        const profile = data.profile_url
     
-        if (!username || !password || !lastname || !firstname || !age || !profile || !address) {
+        if (!username || !password || !lastname || !firstname) {
 
             response.write(JSON.stringify({
             'success': false,
-            'message': 'Invalid data. Expecting `username`, `password`, `lastname`, `firstname`, `age`, `profile_url`, `address`.',
+            'message': 'Invalid data. Expecting `username`, `password`, `lastname`, `firstname`.',
             }))
             return response.end()
         }
     
-        const res = await admin.add_admin(username, password, lastname, firstname, middle_name, age, address, profile)
+        const res = await admin.add_admin(username, password, lastname, firstname, middle_name)
     
         response.write(JSON.stringify({
             'success': true,

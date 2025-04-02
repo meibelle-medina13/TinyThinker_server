@@ -9,21 +9,18 @@ function _sanitize(text) {
     return text.replace(/([^a-z-A-Z-0-9 .,@/_'])+/g, '')
 }
 
-function add_admin(username, password, lastname, firstname, middle_name, age, address, profile_url) {
+function add_admin(username, password, lastname, firstname, middle_name) {
     const cleanUsername = _sanitize(username)
     const cleanPassword = password.toString()
     const cleanLastname = _sanitize(lastname)
     const cleanFirstname = _sanitize(firstname)
     const cleanMiddleName = _sanitize(middle_name)
-    const cleanAge = _sanitize(age)
-    const cleanAddress = _sanitize(address)
-    const profile_link = profile_url
 
     const hashedPass = md5(cleanPassword)
   
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`INSERT INTO admin_accounts(username, password, lastname, firstname, middle_name, status, profile_url, age, address) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [cleanUsername, hashedPass, cleanLastname, cleanFirstname, cleanMiddleName, "0", profile_link, cleanAge, cleanAddress], 
+        databaseInstance.query(`INSERT INTO admin_accounts(username, password, lastname, firstname, middle_name, status, profile_url, address) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
+        [cleanUsername, hashedPass, cleanLastname, cleanFirstname, cleanMiddleName, "0", "", ""], 
         (err, result) => {
             if (err) reject(err)
             resolve({
