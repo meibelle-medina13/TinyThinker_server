@@ -112,22 +112,23 @@ export async function updateAdminAccount(request, response) {
   try {
     const data = request?.body
     const adminID = data.adminID
+    const username = data.username
     const lastname = data.lastname
     const firstname = data.firstname
     const middle_name = data.middle_name
     const age = data.age
     const profile = data.profile_url
 
-    if (!adminID || !lastname || !firstname || !age || !profile) {
+    if (!adminID || !username || !lastname || !firstname || !age || !profile) {
 
         response.write(JSON.stringify({
         'success': false,
-        'message': 'Invalid data. Expecting `adminID`, `lastname`, `firstname`, `age`, `profile_url`.',
+        'message': 'Invalid data. Expecting `adminID`, `username`, `lastname`, `firstname`, `age`, `profile_url`.',
         }))
         return response.end()
     }
 
-    const res = await admin.update_adminAccount(adminID, lastname, firstname, middle_name, age, profile)
+    const res = await admin.update_adminAccount(adminID, username, lastname, firstname, middle_name, age, profile)
 
     response.write(JSON.stringify({
         'success': true,

@@ -77,7 +77,7 @@ function get_admin(adminID) {
             }
     
             const id = parseInt(adminID, 10)
-            databaseInstance.query(`SELECT lastname, firstname, middle_name FROM admin_accounts WHERE ID = ?`, [id], (err, results, fields) => {
+            databaseInstance.query(`SELECT username, lastname, firstname, middle_name, profile_url, age FROM admin_accounts WHERE ID = ?`, [id], (err, results, fields) => {
             if (err) reject(err)
     
             resolve(results)
@@ -95,7 +95,8 @@ function get_pending() {
     })
 }
 
-function update_adminAccount(adminID, lastname, firstname, middle_name, age, profile_url) {
+function update_adminAccount(adminID, username, lastname, firstname, middle_name, age, profile_url) {
+    const cleanUsername = _sanitize(username)
     const cleanLastname = _sanitize(lastname)
     const cleanFirstname = _sanitize(firstname)
     const cleanMiddleName = _sanitize(middle_name)
@@ -105,8 +106,8 @@ function update_adminAccount(adminID, lastname, firstname, middle_name, age, pro
     const admin = parseInt(adminID, 10)
 
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`UPDATE admin_accounts SET lastname = ?, firstname = ?, middle_name = ?, profile_url = ?, age = ? WHERE ID = ?`,
-        [cleanLastname, cleanFirstname, cleanMiddleName, profile_link, cleanAge, admin], 
+        databaseInstance.query(`UPDATE admin_accounts SET username = ?, lastname = ?, firstname = ?, middle_name = ?, profile_url = ?, age = ? WHERE ID = ?`,
+        [cleanUsername, cleanLastname, cleanFirstname, cleanMiddleName, profile_link, cleanAge, admin], 
         (err, result) => {
             if (err) reject(err)
             resolve({
