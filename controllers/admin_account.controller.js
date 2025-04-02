@@ -10,18 +10,19 @@ export async function addAdmin(request, response) {
         const firstname = data.firstname
         const middle_name = data.middle_name
         const age = data.age
+        const address = data.address
         const profile = data.profile_url
     
-        if (!username || !password || !lastname || !firstname || !age || !profile) {
+        if (!username || !password || !lastname || !firstname || !age || !profile || !address) {
 
             response.write(JSON.stringify({
             'success': false,
-            'message': 'Invalid data. Expecting `username`, `password`, `lastname`, `firstname`, `age`, `profile_url`.',
+            'message': 'Invalid data. Expecting `username`, `password`, `lastname`, `firstname`, `age`, `profile_url`, `address`.',
             }))
             return response.end()
         }
     
-        const res = await admin.add_admin(username, password, lastname, firstname, middle_name, age, profile)
+        const res = await admin.add_admin(username, password, lastname, firstname, middle_name, age, address, profile)
     
         response.write(JSON.stringify({
             'success': true,
@@ -117,18 +118,19 @@ export async function updateAdminAccount(request, response) {
     const firstname = data.firstname
     const middle_name = data.middle_name
     const age = data.age
+    const address = data.address
     const profile = data.profile_url
 
-    if (!adminID || !username || !lastname || !firstname || !age || !profile) {
+    if (!adminID || !username || !lastname || !firstname || !age || !profile || !address) {
 
         response.write(JSON.stringify({
         'success': false,
-        'message': 'Invalid data. Expecting `adminID`, `username`, `lastname`, `firstname`, `age`, `profile_url`.',
+        'message': 'Invalid data. Expecting `adminID`, `username`, `lastname`, `firstname`, `age`, `profile_url`, `address`.',
         }))
         return response.end()
     }
 
-    const res = await admin.update_adminAccount(adminID, username, lastname, firstname, middle_name, age, profile)
+    const res = await admin.update_adminAccount(adminID, username, lastname, firstname, middle_name, age, address, profile)
 
     response.write(JSON.stringify({
         'success': true,

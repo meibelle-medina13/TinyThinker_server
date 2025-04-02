@@ -6,23 +6,24 @@ function _sanitize(text) {
     if (typeof text === "number") {
         return text
     }
-    return text.replace(/([^a-z-A-Z-0-9 .@/_'])+/g, '')
+    return text.replace(/([^a-z-A-Z-0-9 .,@/_'])+/g, '')
 }
 
-function add_admin(username, password, lastname, firstname, middle_name, age, profile_url) {
+function add_admin(username, password, lastname, firstname, middle_name, age, address, profile_url) {
     const cleanUsername = _sanitize(username)
     const cleanPassword = password.toString()
     const cleanLastname = _sanitize(lastname)
     const cleanFirstname = _sanitize(firstname)
     const cleanMiddleName = _sanitize(middle_name)
     const cleanAge = _sanitize(age)
+    const cleanAddress = _sanitize(address)
     const profile_link = profile_url
 
     const hashedPass = md5(cleanPassword)
   
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`INSERT INTO admin_accounts(username, password, lastname, firstname, middle_name, status, profile_url, age) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
-        [cleanUsername, hashedPass, cleanLastname, cleanFirstname, cleanMiddleName, "0", profile_link, cleanAge], 
+        databaseInstance.query(`INSERT INTO admin_accounts(username, password, lastname, firstname, middle_name, status, profile_url, age, address) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [cleanUsername, hashedPass, cleanLastname, cleanFirstname, cleanMiddleName, "0", profile_link, cleanAge, cleanAddress], 
         (err, result) => {
             if (err) reject(err)
             resolve({
@@ -77,7 +78,7 @@ function get_admin(adminID) {
             }
     
             const id = parseInt(adminID, 10)
-            databaseInstance.query(`SELECT username, lastname, firstname, middle_name, profile_url, age FROM admin_accounts WHERE ID = ?`, [id], (err, results, fields) => {
+            databaseInstance.query(`SELECT username, lastname, firstname, middle_name, profile_url, age, address FROM admin_accounts WHERE ID = ?`, [id], (err, results, fields) => {
             if (err) reject(err)
     
             resolve(results)
@@ -88,26 +89,37 @@ function get_admin(adminID) {
 
 function get_pending() {
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`SELECT lastname, firstname, middle_name FROM admin_accounts WHERE status = ?`, [0], (err, results, fields) => {
+        databaseInstance.query(`SELECT ID, lastname, firstname, middle_name FROM admin_accounts WHERE status = ?`, [0], (err, results, fields) => {
         if (err) reject(err)
-        resolve(results)
+        // resolve(results)
+        let newResult = []
+        for (let i = 0; i < results.length; i++) {
+            let temp = {}
+            temp["id"] = results[i].ID,
+            temp["lastname"] = results[i].lastname,
+            temp["firstname"] = results[i].firstname,
+            temp["middle_name"] = results[i].middle_name
+            newResult.push(temp)
+        }
+        resolve(newResult)
         })
     })
 }
 
-function update_adminAccount(adminID, username, lastname, firstname, middle_name, age, profile_url) {
+function update_adminAccount(adminID, username, lastname, firstname, middle_name, age, address, profile_url) {
     const cleanUsername = _sanitize(username)
     const cleanLastname = _sanitize(lastname)
     const cleanFirstname = _sanitize(firstname)
     const cleanMiddleName = _sanitize(middle_name)
     const cleanAge = _sanitize(age)
+    const cleanAddress = _sanitize(address)
     const profile_link = profile_url
     
     const admin = parseInt(adminID, 10)
 
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`UPDATE admin_accounts SET username = ?, lastname = ?, firstname = ?, middle_name = ?, profile_url = ?, age = ? WHERE ID = ?`,
-        [cleanUsername, cleanLastname, cleanFirstname, cleanMiddleName, profile_link, cleanAge, admin], 
+        databaseInstance.query(`UPDATE admin_accounts SET username = ?, lastname = ?, firstname = ?, middle_name = ?, profile_url = ?, age = ?, address = ? WHERE ID = ?`,
+        [cleanUsername, cleanLastname, cleanFirstname, cleanMiddleName, profile_link, cleanAge, cleanAddress, admin], 
         (err, result) => {
             if (err) reject(err)
             resolve({
