@@ -118,11 +118,11 @@ export async function updateAdminAccount(request, response) {
     const address = data.address
     const profile = data.profile_url
 
-    if (!adminID || !username || !lastname || !firstname || !age || !profile || !address) {
+    if (!adminID || !username || !lastname || !firstname) {
 
         response.write(JSON.stringify({
         'success': false,
-        'message': 'Invalid data. Expecting `adminID`, `username`, `lastname`, `firstname`, `age`, `profile_url`, `address`.',
+        'message': 'Invalid data. Expecting `adminID`, `username`, `lastname`, `firstname`.',
         }))
         return response.end()
     }

@@ -124,7 +124,7 @@ function update_adminAccount(adminID, username, lastname, firstname, middle_name
         (err, result) => {
             if (err) reject(err)
             resolve({
-                "message": "Profile Update Successful"
+                "message": "Profile Updated Successful."
             })
             }
         )
