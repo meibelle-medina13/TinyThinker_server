@@ -46,6 +46,7 @@ function login(username, password) {
                     const result_pass = result[0].password
                     if (hashedPass == result_pass) {
                         resolve({
+                            "status": result[0].status,
                             "message": "Login Successful",
                             "id": result[0].ID
                         })
@@ -55,7 +56,10 @@ function login(username, password) {
                     }
                 }
                 else {
-                    resolve("Your account is waiting for approval.")
+                    resolve({
+                        "status": result[0].status,
+                        "message": "Your account is waiting for approval."
+                    })
                 }
             }
             else {
