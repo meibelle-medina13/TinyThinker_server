@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json())
 registerRoutes(app)
 
-
 app.listen(port, () => {
   console.log(`[SERVER] Running on development port ${ port }`)
 })

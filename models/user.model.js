@@ -7,26 +7,29 @@ function _sanitize(text) {
     return text.replace(/([^a-z-A-Z-0-9 .@_'])+/g, '')
 }
 
-function get(query, offset = 0, limit = 50) {
+function get(query) {
     return new Promise((resolve, reject) => {
         const data = [{},
             {"Age3": 0, "Age4": 0, "Age5": 0}]
         if (query) {
             if (/\D+/g.test(query)) {
-            console.log('[PLAYER ACCOUNT] Invalid Query', query)
-            resolve([])
+                console.log('[GET PLAYER ACCOUNT] Invalid Query', query)
+                resolve({
+                    "message": '[GET PLAYER ACCOUNT] Invalid Query'
+                })
             }
     
             const id = parseInt(query, 10)
-            databaseInstance.query(`SELECT * FROM users WHERE ID = ?`, [id], (err, results, fields) => {
-            if (err) reject(err)
-    
-            resolve(results)
+            databaseInstance.query(`SELECT * FROM users WHERE ID = ?`, [id], 
+            (err, results, fields) => {
+                if (err) reject(err)
+        
+                resolve(results)
             })
         } else {
-            databaseInstance.query(`SELECT * FROM users ORDER BY id LIMIT ${limit} OFFSET ${offset}`, (err, results, fields) => {
+            databaseInstance.query(`SELECT * FROM users ORDER BY id`, 
+            (err, results, fields) => {
                 if (err) reject(err)
-
                 data[0] = results
                 for (let i = 0; i < results.length; i++) {
                     if (results[i].age == 3) {
@@ -49,18 +52,20 @@ function get_user_by_guardianID(guardianID) {
     return new Promise((resolve, reject) => {
         if (guardianID) {
             if (/\D+/g.test(guardianID)) {
-            console.log('[PLAYER ACCOUNT] Invalid Query', guardianID)
-            resolve([])
+                console.log('[GET PLAYER ACCOUNT] Invalid Query', guardianID)
+                resolve({
+                    "message": '[GET PLAYER ACCOUNT] Invalid Query'
+                })
             }
     
             const id = parseInt(guardianID, 10)
-            databaseInstance.query(`SELECT * FROM users WHERE guardian_ID = ?`, [id], (err, results, fields) => {
-            if (err) reject(err)
-    
-            resolve(results)
+            databaseInstance.query(`SELECT * FROM users WHERE guardian_ID = ?`, [id], 
+            (err, results, fields) => {
+                if (err) reject(err)
+                resolve(results)
             })
         }
-        })
+    })
 }
 
 function add_user(username, age, gender, avatar_filename, current_theme, current_level, relation_to_guardian, guardian_ID) {
