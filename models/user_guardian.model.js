@@ -8,26 +8,29 @@ function _sanitize(text) {
     return text.replace(/([^a-z-A-Z-0-9 .@_'])+/g, '')
 }
 
-function get(query, offset = 0, limit = 50) {
+function get(query, offset = 0, limit = 0) {
     return new Promise((resolve, reject) => {
         if (query) {
             if (/\D+/g.test(query)) {
-            console.log('[GUARDIAN ACCOUNT] Invalid Query', query)
-            resolve([])
+                console.log('[GET GUARDIAN ACCOUNT] Invalid Query', query)
+                resolve({
+                    "message": '[GET GUARDIAN ACCOUNT] Invalid Query'
+                })
             }
     
             const id = parseInt(query, 10)
-            databaseInstance.query(`SELECT * FROM users_guardian WHERE id = ?`, [id], (err, results, fields) => {
-            if (err) reject(err)
-    
-            resolve(results)
+            databaseInstance.query(`SELECT * FROM users_guardian WHERE id = ?`, [id], 
+            (err, results, fields) => {
+                if (err) reject(err)
+                resolve(results)
             })
         } else {
-            databaseInstance.query(`SELECT ID, email, birth_year FROM users_guardian ORDER BY id LIMIT ${limit} OFFSET ${offset}`, (err, results, fields) => {
+            databaseInstance.query(`SELECT ID, email, birth_year FROM users_guardian ORDER BY id`, 
+            (err, results, fields) => {
                 if (err) reject(err)
                 const data = []
-            
-            for (let i = 0; i < results.length; i++) {
+        
+                for (let i = 0; i < results.length; i++) {
                     let date = new Date()
                     let year = date.getFullYear()
                     let age = year - results[i].birth_year
@@ -35,13 +38,12 @@ function get(query, offset = 0, limit = 50) {
                     let email = results[i].email
                     const user = []
                     
-                    databaseInstance.query(`SELECT ID, username, guardian_ID FROM users WHERE guardian_ID = ?`, [guardian_ID], (err, results1, fields) => {
-                        
+                    databaseInstance.query(`SELECT ID, username, guardian_ID FROM users WHERE guardian_ID = ?`, [guardian_ID], 
+                    (err1, results1, fields) => {
+                        if (err1) reject(err1)
                         for (let j = 0; j < results1.length; j++) {
                             user.push(results1[j].username)
                         }
-
-
                         const guardian = {
                             "email": email,
                             "age": age,
@@ -65,7 +67,6 @@ function add_guardian(email, password, birth_month, birth_date, birth_year) {
     const cleanBirthMonth = _sanitize(birth_month)
     const cleanBirthDate = _sanitize(birth_date)
     const cleanBirthYear = _sanitize(birth_year)
-
     const hashedPass = md5(cleanPassword)
   
     return new Promise((resolve, reject) => {
@@ -74,35 +75,30 @@ function add_guardian(email, password, birth_month, birth_date, birth_year) {
         (err, result) => {
             if (err) reject(err)
             resolve(result)
-            }
-        )
+        })
     })
 }
 
 function search_guardian(email) {
     return new Promise((resolve, reject) => {
-        console.log(email)
         if (email) {
-            databaseInstance.query(`SELECT ID FROM users_guardian WHERE email = ?`, [email], (err, results, fields) => {
-            if (err) reject(err)
-    
-            resolve(results)
+            databaseInstance.query(`SELECT ID FROM users_guardian WHERE email = ?`, [email], 
+            (err, results, fields) => {
+                if (err) reject(err)
+                resolve(results)
             })
         }
     })
 }
 
 function login(email, password) {
-    password = password.toString()
     const cleanEmail = _sanitize(email)
-    const cleanPassword = _sanitize(password)
-
-    console.log(typeof(password))
-
+    const cleanPassword = password.toString()
     const hashedPass = md5(cleanPassword)
   
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`SELECT password FROM users_guardian WHERE email = ?`, [cleanEmail], (err, result) => {
+        databaseInstance.query(`SELECT password FROM users_guardian WHERE email = ?`, [cleanEmail], 
+        (err, result) => {
             if (err) reject(err)
             if (result.length > 0) {
                 const result_pass = result[0].password
@@ -116,8 +112,7 @@ function login(email, password) {
             else {
                 resolve("Email Not Found!")
             }
-            }
-        )
+        })
     })
 }
 
@@ -126,7 +121,8 @@ function verify_birth_year(id, year) {
     const cleanYear = _sanitize(year)
   
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`SELECT birth_year FROM users_guardian WHERE ID = ?`, [cleanID], (err, result) => {
+        databaseInstance.query(`SELECT birth_year FROM users_guardian WHERE ID = ?`, [cleanID], 
+        (err, result) => {
             if (err) reject(err)
             if (result.length > 0) {
                 const result_year = result[0].birth_year

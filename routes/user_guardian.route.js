@@ -9,5 +9,4 @@ router.post('/', addGuardian)
 router.post('/login', LogIn)
 router.post('/verify_year', VerifyBirthYear)
 
-
 export default router
