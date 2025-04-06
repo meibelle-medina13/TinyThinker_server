@@ -1,4 +1,3 @@
-import { get } from 'http'
 import databaseInstance from '../database.js'
 import md5 from 'md5'
 
@@ -15,9 +14,8 @@ function add_admin(username, password, lastname, firstname, middle_name) {
     const cleanLastname = _sanitize(lastname)
     const cleanFirstname = _sanitize(firstname)
     const cleanMiddleName = _sanitize(middle_name)
-
     const hashedPass = md5(cleanPassword)
-  
+
     return new Promise((resolve, reject) => {
         databaseInstance.query(`INSERT INTO admin_accounts(username, password, lastname, firstname, middle_name, status, profile_url, address) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
         [cleanUsername, hashedPass, cleanLastname, cleanFirstname, cleanMiddleName, "0", "", ""], 
@@ -26,20 +24,18 @@ function add_admin(username, password, lastname, firstname, middle_name) {
             resolve({
                 "message": "Your account is waiting for approval."
             })
-            }
-        )
+        })
     })
 }
 
 function login(username, password) {
-    password = password.toString()
     const cleanUsername = _sanitize(username)
     const cleanPassword = password.toString()
-
     const hashedPass = md5(cleanPassword)
   
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`SELECT ID, password, status FROM admin_accounts WHERE username = ?`, [cleanUsername], (err, result) => {
+        databaseInstance.query(`SELECT ID, password, status FROM admin_accounts WHERE username = ?`, [cleanUsername], 
+        (err, result) => {
             if (err) reject(err)
             if (result.length == 1) {
                 if (result[0].status == 1) {
@@ -65,8 +61,7 @@ function login(username, password) {
             else {
                 resolve("Username Not Found!")
             }
-            }
-        )
+        })
     })
 }
 
@@ -74,25 +69,27 @@ function get_admin(adminID) {
     return new Promise((resolve, reject) => {
         if (adminID) {
             if (/\D+/g.test(adminID)) {
-            console.log('[ADMIN] Invalid Query', adminID)
-            resolve([])
+                console.log('[GET ADMIN] Invalid Query', adminID)
+                resolve({
+                    "message": '[GET ADMIN] Invalid Query'
+                })
             }
-    
+
             const id = parseInt(adminID, 10)
-            databaseInstance.query(`SELECT username, lastname, firstname, middle_name, profile_url, age, address FROM admin_accounts WHERE ID = ?`, [id], (err, results, fields) => {
+            databaseInstance.query(`SELECT username, lastname, firstname, middle_name, profile_url, age, address FROM admin_accounts WHERE ID = ?`, [id], 
+            (err, results, fields) => {
             if (err) reject(err)
-    
             resolve(results)
             })
         }
-        })
+    })
 }
 
 function get_pending() {
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`SELECT ID, lastname, firstname, middle_name FROM admin_accounts WHERE status = ?`, [0], (err, results, fields) => {
+        databaseInstance.query(`SELECT ID, lastname, firstname, middle_name FROM admin_accounts WHERE status = ?`, [0], 
+        (err, results, fields) => {
         if (err) reject(err)
-        // resolve(results)
         let newResult = []
         for (let i = 0; i < results.length; i++) {
             let temp = {}
@@ -115,7 +112,6 @@ function update_adminAccount(adminID, username, lastname, firstname, middle_name
     const cleanAge = _sanitize(age)
     const cleanAddress = _sanitize(address)
     const profile_link = profile_url
-    
     const admin = parseInt(adminID, 10)
 
     return new Promise((resolve, reject) => {
@@ -126,48 +122,49 @@ function update_adminAccount(adminID, username, lastname, firstname, middle_name
             resolve({
                 "message": "Profile Updated Successfully."
             })
-            }
-        )
+        })
     })
 }
 
 function approve_request(adminID) {
-    if (adminID) {
-        if (/\D+/g.test(adminID)) {
-        console.log('[ADMIN ACCOUNT] Invalid Query ', adminID)
-        resolve([])
-        }
-    }
-    const admin = parseInt(adminID, 10)
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`UPDATE admin_accounts SET status = ? WHERE ID = ?`,
-        [1, admin], 
+        if (adminID) {
+            if (/\D+/g.test(adminID)) {
+                console.log('[APPROVE ADMIN ACCOUNT] Invalid Query ', adminID)
+                resolve({
+                    "message": '[APPROVE ADMIN ACCOUNT] Invalid Query'
+                })
+            }
+        }
+
+        const admin = parseInt(adminID, 10)
+        databaseInstance.query(`UPDATE admin_accounts SET status = ? WHERE ID = ?`, [1, admin], 
         (err, result) => {
             if (err) reject(err)
             console.log(result)
             resolve("Account Approved!")
-            }
-        )
+        })
     })
 }
 
 function decline_request(adminID) {
-    if (adminID) {
-        if (/\D+/g.test(adminID)) {
-        console.log('[ADMIN ACCOUNT] Invalid Query ', adminID)
-        resolve([])
-        }
-    }
-    const admin = parseInt(adminID, 10)
     return new Promise((resolve, reject) => {
-        databaseInstance.query(`DELETE FROM admin_accounts WHERE ID = ?`,
-        [admin], 
+        if (adminID) {
+            if (/\D+/g.test(adminID)) {
+                console.log('[DECLINE ADMIN ACCOUNT] Invalid Query ', adminID)
+                resolve({
+                    "message": '[DECLINE ADMIN ACCOUNT] Invalid Query'
+                })
+            }
+        }
+
+        const admin = parseInt(adminID, 10)
+        databaseInstance.query(`DELETE FROM admin_accounts WHERE ID = ?`, [admin], 
         (err, result) => {
             if (err) reject(err)
             console.log(result)
             resolve("Account Declined!")
-            }
-        )
+        })
     })
 }
 
