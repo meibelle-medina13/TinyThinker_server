@@ -17,7 +17,7 @@ function update_QuarterStatus(theme, status) {
         if (/\D+/g.test(theme) && /\D+/g.test(status)) {
             console.log('[QUARTER STATUS] Invalid Query ', theme, ' and ', status)
             resolve({
-                "message": '[QUARTER STATUS] Invalid Query'
+                "message": '[UPDATE QUARTER STATUS] Invalid Query'
             })
         }
     }
