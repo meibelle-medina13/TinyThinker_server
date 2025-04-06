@@ -140,6 +140,7 @@ export async function approveRequest(request, response) {
         'success': false,
         'message': 'Invalid data. Expecting `adminID`.',
         }))
+        return response.end()
     }
     const res = await admin.approve_request(adminID)
     response.write(JSON.stringify({
@@ -165,6 +166,7 @@ export async function declineRequest(request, response) {
         'success': false,
         'message': 'Invalid data. Expecting `adminID`.',
         }))
+        return response.end()
     }
     const res = await admin.decline_request(adminID)
     response.write(JSON.stringify({

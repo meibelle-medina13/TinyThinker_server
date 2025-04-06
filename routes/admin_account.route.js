@@ -11,5 +11,4 @@ router.put('/edit', updateAdminAccount)
 router.put('/approve', approveRequest)
 router.delete('/', declineRequest)
 
-
 export default router

@@ -141,7 +141,6 @@ function approve_request(adminID) {
         databaseInstance.query(`UPDATE admin_accounts SET status = ? WHERE ID = ?`, [1, admin], 
         (err, result) => {
             if (err) reject(err)
-            console.log(result)
             resolve("Account Approved!")
         })
     })
@@ -162,7 +161,6 @@ function decline_request(adminID) {
         databaseInstance.query(`DELETE FROM admin_accounts WHERE ID = ?`, [admin], 
         (err, result) => {
             if (err) reject(err)
-            console.log(result)
             resolve("Account Declined!")
         })
     })
