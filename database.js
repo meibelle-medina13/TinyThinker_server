@@ -1,16 +1,12 @@
 import mysql from 'mysql2'
+import dotenv from 'dotenv'
+dotenv.config()
 
-const DATABASE_HOST = 'mysql-17d6ea4e-tinythinker.f.aivencloud.com'
-const DATABASE_USERNAME = 'avnadmin'
-const DATABASE_PASSWORD = 'AVNS_2c14i9EDNnLxLr2d2A3'
-const DATABASE_NAME = 'tinythinker'
-const PORT = 17267
-
-// const DATABASE_HOST = 'localhost'
-// const DATABASE_USERNAME = 'meibellemedina'
-// const DATABASE_PASSWORD = 'meichuninoo101302!'
-// const DATABASE_NAME = 'tinythinker'
-// const PORT = 3306
+const DATABASE_HOST = process.env.DATABASE_HOST
+const DATABASE_USERNAME = process.env.DATABASE_USERNAME
+const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD
+const DATABASE_NAME = process.env.DATABASE_NAME
+const PORT = process.env.PORT
 
 const databaseInstance = mysql.createPool({
   host: DATABASE_HOST,
